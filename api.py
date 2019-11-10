@@ -1,5 +1,7 @@
 def entire_map()
 
+def starloction()
+
 def local_map(width, height)
 
 def travel_distance()
