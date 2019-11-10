@@ -1,6 +1,6 @@
 def entire_map()
 
-def starloction()
+def start_loction()
 
 def local_map(width, height)
 
