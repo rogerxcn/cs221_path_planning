@@ -17,3 +17,5 @@ def available_actions()
 def remaining_nodes()
 
 def num_unvisited_nodes()
+
+def getsucceedlocation(action)
