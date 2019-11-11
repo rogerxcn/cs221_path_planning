@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 
 class DiscreteSquareMap:
 
@@ -164,6 +165,12 @@ class DiscreteSquareMapEnv():
             self.agent_turns += 1
 
         return
+    
+    def next_entire_map(action):
+        a=copy.deepcopy(self.entire_map())
+        aagentX, aagentY = self.next_location(action)
+        a[aagentX,aagentY]=self.map.VISITED
+        return a
 
 
     def visualize(self):
