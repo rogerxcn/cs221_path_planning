@@ -151,7 +151,7 @@ class DiscreteSquareMapEnv():
 
 
     def num_unvisited_nodes(self):
-        return self.map.data[self.map.data == 0].size()
+        return len(self.map.data[self.map.data == 0])
 
 
     def step(self, action):
@@ -199,6 +199,8 @@ def main():
     print("Step(RIGHT):")
     env.step(3)
     env.visualize()
+
+    print(env.num_unvisited_nodes())
 
     print("Step(DOWN):")
     env.step(1)
