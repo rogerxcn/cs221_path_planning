@@ -153,6 +153,7 @@ class DiscreteSquareMapEnv():
     def num_unvisited_nodes(self):
         return self.map.data[self.map.data == 0].size()
 
+
     def step(self, action):
         assert action in self.available_actions(), "invalid action"
 
@@ -164,7 +165,10 @@ class DiscreteSquareMapEnv():
         if self.last_action is not None and self.last_action != action:
             self.agent_turns += 1
 
+        self.agent_episode.append(action)
+
         return
+
 
     def next_entire_map(self, action):
         assert action in self.available_actions(), "invalid action"
