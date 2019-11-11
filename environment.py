@@ -65,7 +65,7 @@ class DiscreteSquareMapEnv():
 
 
     def entire_map(self):
-        return self.data.copy()
+        return self.map.data.copy()
 
 
     def local_map(self, width, height):
@@ -172,7 +172,7 @@ class DiscreteSquareMapEnv():
         m = self.entire_map()
         agentX, agentY = self.next_location(action)
         m[agentX][agentY] = self.map.VISITED
-        
+
         return m
 
 
