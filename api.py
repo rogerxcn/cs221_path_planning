@@ -18,6 +18,6 @@ def remaining_nodes()
 
 def num_unvisited_nodes()
 
-def getsucceedlocation(action)
+def next_location(action)
 
-def getsucceednum_unvisited_nodes(action)
+def num_unvisited_successors(action)

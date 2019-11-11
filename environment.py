@@ -2,7 +2,6 @@ import numpy as np
 
 class DiscreteSquareMap:
 
-    #
     # -----------→ width (Y)
     # |
     # |
@@ -20,17 +19,24 @@ class DiscreteSquareMap:
 
         self.data = np.zeros((height, width), dtype=int)
 
-    def block_area(start, end):
+
+    def block_area(self, start, end):
         for i in range(start[0], end[0]+1):
             for j in range(start[1], end[1]+1):
-                self.map[i][j] = -1
+                self.data[i][j] = -1
 
-    def access(locX, locY):
+
+    def access(self, locX, locY):
         if locX >= self.height or locX < 0:
             return self.BLOCKED
         if locY >= self.width or locY < 0:
             return self.BLOCKED
         return self.data[locX][locY]
+
+
+    def visit(self, locX, locY):
+        assert self.data[locX][locY] != self.BLOCKED
+        self.data[locX][locY] = self.VISITED
 
 
 class DiscreteSquareMapEnv():
@@ -52,10 +58,16 @@ class DiscreteSquareMapEnv():
         self.agent_distance = 1
         self.agent_episode = []
 
-    def entire_map():
+        self.last_action = None
+
+        self.map.visit(start[0], start[1])
+
+
+    def entire_map(self):
         return self.data.copy()
 
-    def local_map(width, height):
+
+    def local_map(self, width, height):
         assert width % 2 == 1, "width must be an odd number"
         assert height % 2 == 1, "height must be an odd number"
 
@@ -70,26 +82,114 @@ class DiscreteSquareMapEnv():
 
         return lmap.copy()
 
-    def travel_distance():
+
+    def travel_distance(self):
         return self.agent_distance
 
-    def num_turns():
+
+    def num_turns(self):
         return self.agent_turns
 
-    def current_episode():
+
+    def current_episode(self):
         return self.agent_episode.copy()
 
-    def agent_location():
-        return (agentX, agentY)
 
-    def available_actions():
+    def agent_location(self):
+        return (self.agentX, self.agentY)
+
+
+    def available_actions(self):
         actions = []
-        if self.map.access(agentX-1) != self.map.BLOCKED:
+        if self.map.access(self.agentX-1, self.agentY) != self.map.BLOCKED:
             actions.append(self.UP)
-        if self.map.access(agentX+1) != self.map.BLOCKED:
+        if self.map.access(self.agentX+1, self.agentY) != self.map.BLOCKED:
             actions.append(self.DOWN)
-        if self.map.access(agentY-1) != self.map.BLOCKED:
+        if self.map.access(self.agentX, self.agentY-1) != self.map.BLOCKED:
             actions.append(self.LEFT)
-        if self.map.access(agentY+1) != self.map.BLOCKED:
+        if self.map.access(self.agentX, self.agentY+1) != self.map.BLOCKED:
             actions.append(self.RIGHT)
         return actions.copy()
+
+
+    def num_unvisited_successors(self, action):
+        sum = 0
+        if self.map.access(self.agentX-1, self.agentY) != self.map.UNVISITED:
+            sum += 1
+        if self.map.access(self.agentX+1, self.agentY) != self.map.UNVISITED:
+            sum += 1
+        if self.map.access(self.agentX, self.agentY-1) != self.map.UNVISITED:
+            sum += 1
+        if self.map.access(self.agentX, self.agentY+1) != self.map.UNVISITED:
+            sum += 1
+        return sum
+
+
+    def next_location(self, action):
+        if action == self.UP:
+            return (self.agentX-1, self.agentY)
+        elif action == self.DOWN:
+            return (self.agentX+1, self.agentY)
+        elif action == self.LEFT:
+            return (self.agentX, self.agentY-1)
+        elif action == self.RIGHT:
+            return (self.agentX, self.agentY+1)
+
+        raise Exception("invalid action entered")
+
+
+    def remaining_nodes(self):
+        nodes = []
+
+        for i in range(self.map.height+1):
+            for j in range(self.map.width+1):
+                if self.map.access(i, j) == self.map.UNVISITED:
+                    nodes.append((i, j))
+
+        return nodes.copy()
+
+
+    def num_unvisited_nodes(self):
+        return self.map.data[self.map.data == 0].size()
+
+    def step(self, action):
+        assert action in self.available_actions(), "invalid action"
+
+        self.agentX, self.agentY = self.next_location(action)
+
+        self.map.visit(self.agentX, self.agentY)
+        self.agent_distance += 1
+
+        if self.last_action is not None and self.last_action != action:
+            self.agent_turns += 1
+
+        return
+
+
+    def visualize(self):
+        temp = self.map.data.copy().astype(str)
+        temp[self.agentX][self.agentY] = 'A'
+        print(temp)
+
+
+def main():
+    env = DiscreteSquareMapEnv(map_dim=(6, 6), block_area=((1, 2), (3, 3)))
+
+    print("Initial map:")
+    env.visualize()
+
+    print("Step(DOWN):")
+    env.step(1)
+    env.visualize()
+
+    print("Step(RIGHT):")
+    env.step(3)
+    env.visualize()
+
+    print("Step(DOWN):")
+    env.step(1)
+    env.visualize()
+
+
+if __name__ == '__main__':
+    main()
