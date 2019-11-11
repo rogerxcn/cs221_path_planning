@@ -166,10 +166,10 @@ class DiscreteSquareMapEnv():
 
         return
     
-    def next_entire_map(action):
+    def next_entire_map(self,action):
         a=copy.deepcopy(self.entire_map())
         aagentX, aagentY = self.next_location(action)
-        a[aagentX,aagentY]=self.map.VISITED
+        a[aagentX][aagentY]=self.map.VISITED
         return a
 
 
