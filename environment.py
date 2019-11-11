@@ -169,7 +169,7 @@ class DiscreteSquareMapEnv():
     def next_entire_map(self, action):
         assert action in self.available_actions(), "invalid action"
 
-        m = self.entire_map().copy()
+        m = self.entire_map()
         agentX, agentY = self.next_location(action)
         m[agentX][agentY] = self.map.VISITED
 
