@@ -115,13 +115,13 @@ class DiscreteSquareMapEnv():
 
     def num_unvisited_successors(self, action):
         sum = 0
-        if self.map.access(self.agentX-1, self.agentY) != self.map.UNVISITED:
+        if self.map.access(self.agentX-1, self.agentY) == self.map.UNVISITED:
             sum += 1
-        if self.map.access(self.agentX+1, self.agentY) != self.map.UNVISITED:
+        if self.map.access(self.agentX+1, self.agentY) == self.map.UNVISITED:
             sum += 1
-        if self.map.access(self.agentX, self.agentY-1) != self.map.UNVISITED:
+        if self.map.access(self.agentX, self.agentY-1) == self.map.UNVISITED:
             sum += 1
-        if self.map.access(self.agentX, self.agentY+1) != self.map.UNVISITED:
+        if self.map.access(self.agentX, self.agentY+1) == self.map.UNVISITED:
             sum += 1
         return sum
 
@@ -165,12 +165,15 @@ class DiscreteSquareMapEnv():
             self.agent_turns += 1
 
         return
-    
-    def next_entire_map(self,action):
-        a=copy.deepcopy(self.entire_map())
-        aagentX, aagentY = self.next_location(action)
-        a[aagentX][aagentY]=self.map.VISITED
-        return a
+
+    def next_entire_map(self, action):
+        assert action in self.available_actions(), "invalid action"
+
+        m = self.entire_map()
+        agentX, agentY = self.next_location(action)
+        m[agentX][agentY] = self.map.VISITED
+        
+        return m
 
 
     def visualize(self):
