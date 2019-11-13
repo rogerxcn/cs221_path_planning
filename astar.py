@@ -221,7 +221,10 @@ obstacles = [((3,3),(4,5))]
 occupancy = DetOccupancyGrid2D(width, height, obstacles)
 action = test_env.available_actions()[0]
 iteration = 0
+# action list 
 act_list = []
+# when agent visited all nearby cells, 
+# record current location and new unvisitied location in this list.
 jump_node_list = []
 # keep looping until all cells visieted
 while test_env.num_unvisited_nodes() != 0:
@@ -236,8 +239,6 @@ while test_env.num_unvisited_nodes() != 0:
     else:
         #  undate action list and env
         act_list.append(action)
-        print(test_env.available_actions())
-        print(action)
         test_env.step(action)
         iteration += 1
         # select next action only needed when cannot use same action
@@ -276,6 +277,8 @@ while test_env.num_unvisited_nodes() != 0:
                             break
 print(act_list)
 print(jump_node_list)
+print(test_env.num_turns())
+print(test_env.travel_distance())
 test_env.visualize()
 #if not astar.solve():
     # print "No path found"

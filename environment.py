@@ -205,6 +205,7 @@ def main():
     print("Step(DOWN):")
     env.step(1)
     env.visualize()
+  
 
 
 if __name__ == '__main__':
