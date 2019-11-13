@@ -167,6 +167,8 @@ class DiscreteSquareMapEnv():
 
         self.agent_episode.append(action)
 
+        self.last_action = action
+
         return
 
 
@@ -205,7 +207,7 @@ def main():
     print("Step(DOWN):")
     env.step(1)
     env.visualize()
-  
+
 
 
 if __name__ == '__main__':
