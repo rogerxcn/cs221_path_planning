@@ -45,7 +45,9 @@ class DiscreteSquareMapEnv():
         self.map = DiscreteSquareMap(map_dim[0], map_dim[1])
 
         if block_area is not None:
-            self.map.block_area(block_area[0], block_area[1])
+            assert isinstance(block_area, tuple), "block_area must be a tuple of ((x1, y1), (x2, y2))"
+            for i, v in enumerate(block_area):
+                self.map.block_area(v[0], v[1])
 
         self.UP = 0
         self.DOWN = 1
@@ -61,6 +63,7 @@ class DiscreteSquareMapEnv():
 
         self.last_action = None
 
+        assert self.map.access(start[0], start[1]) != self.map.BLOCKED, "invalid starting location"
         self.map.visit(start[0], start[1])
 
 
@@ -189,7 +192,7 @@ class DiscreteSquareMapEnv():
 
 
 def main():
-    env = DiscreteSquareMapEnv(map_dim=(6, 6), block_area=((1, 2), (3, 3)))
+    env = DiscreteSquareMapEnv(map_dim=(6, 6), block_area=(((1, 2), (3, 3)), ((4, 4), (5, 5))))
 
     print("Initial map:")
     env.visualize()
