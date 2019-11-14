@@ -187,12 +187,13 @@ class DetOccupancyGrid2D(object):
 ### TESTING
 
 # A simple example
-width = 10
-height = 10
-x_init = (0,0)# env.DiscreteSquareMapEnv.agent_location()
-x_goal = (8,8)
-obstacles = [((6,6),(8,7)),((2,1),(4,2)),((2,4),(4,6)),((6,2),(8,4))]
-occupancy = DetOccupancyGrid2D(width, height, obstacles)
+# test_env = env.DiscreteSquareMapEnv(map_dim=(6, 6), block_area=((1, 2), (3, 3)))
+# width = test_env.map.width
+# height = test_env.map.height
+# x_init = test_env.agent_location()
+# x_goal = test_env.next_location(test_env.available_actions()[0])
+# obstacles = [((3,3),(4,5))]
+# occupancy = DetOccupancyGrid2D(width, height, obstacles)
 
 # A large random example
 # width = 101
@@ -213,10 +214,74 @@ occupancy = DetOccupancyGrid2D(width, height, obstacles)
 #     x_init = tuple(np.random.randint(0,width-2,2).tolist())
 #     x_goal = tuple(np.random.randint(0,height-2,2).tolist())
 
-astar = AStar((0, 0), (width, height), x_init, x_goal, occupancy)
-
-if not astar.solve():
+test_env = env.DiscreteSquareMapEnv(map_dim=(6, 6), block_area=((1, 2), (3, 3)))
+width = test_env.map.width
+height = test_env.map.height
+obstacles = [((3,3),(4,5))]
+occupancy = DetOccupancyGrid2D(width, height, obstacles)
+action = test_env.available_actions()[0]
+iteration = 0
+# action list 
+act_list = []
+# when agent visited all nearby cells, 
+# record current location and new unvisitied location in this list.
+jump_node_list = []
+# keep looping until all cells visieted
+while test_env.num_unvisited_nodes() != 0:
+    if iteration == 0:
+        # update action list and env
+        act_list.append(action)
+        test_env.step(action)
+        iteration += 1
+        # select next action
+        if action not in test_env.available_actions():
+            action = test_env.available_actions()[0]
+    else:
+        #  undate action list and env
+        act_list.append(action)
+        test_env.step(action)
+        iteration += 1
+        # select next action only needed when cannot use same action
+        # strategy: 
+        # 1. check all available actions assigne the one
+        #    leads to unvisit cell.
+        # 2. if all near by cell are visited, agent go to new unvisit location using A*
+        #    and start step through the map 
+        next_x,next_y = test_env.next_location(action)
+        condition = test_env.map.access(next_x,next_y)
+        if action not in test_env.available_actions() or condition != test_env.map.UNVISITED:
+            for i in range(len(test_env.available_actions())):
+                next_x,next_y = test_env.next_location(test_env.available_actions()[i])
+                condition = test_env.map.access(next_x,next_y)
+                # cannot keep straight line, turn available
+                if condition == test_env.map.UNVISITED:
+                    action = test_env.available_actions()[i]
+                    break
+                # cannot keep straiht line, nearby cells are visited
+                elif i == len(test_env.available_actions())-1 and len(test_env.remaining_nodes()) != 0:
+                    x,y = test_env.remaining_nodes()[0]
+                    x_init = test_env.agent_location()
+                    test_env.agentX = x
+                    test_env.agentY = y
+                    x_goal = test_env.agent_location()
+                    jump_node_list.append(x_init)
+                    jump_node_list.append(x_goal)
+                    astar = AStar((0, 0), (width, height), x_init, x_goal, occupancy)
+                    test_env.visualize()
+                    for j in range(len(test_env.available_actions())):
+                        next_x,next_y = test_env.next_location(test_env.available_actions()[i])
+                        condition = test_env.map.access(next_x,next_y)
+                        # cannot keep straight line, turn available
+                        if condition == test_env.map.UNVISITED:
+                            action = test_env.available_actions()[i]
+                            break
+print(act_list)
+print(jump_node_list)
+print(test_env.num_turns())
+print(test_env.travel_distance())
+test_env.visualize()
+#if not astar.solve():
     # print "No path found"
-    exit(0)
+#    exit(0)
 
-astar.plot_path()
+#astar.plot_path()

@@ -45,7 +45,9 @@ class DiscreteSquareMapEnv():
         self.map = DiscreteSquareMap(map_dim[0], map_dim[1])
 
         if block_area is not None:
-            self.map.block_area(block_area[0], block_area[1])
+            assert isinstance(block_area, tuple), "block_area must be a tuple of ((x1, y1), (x2, y2))"
+            for i, v in enumerate(block_area):
+                self.map.block_area(v[0], v[1])
 
         self.UP = 0
         self.DOWN = 1
@@ -61,6 +63,7 @@ class DiscreteSquareMapEnv():
 
         self.last_action = None
 
+        assert self.map.access(start[0], start[1]) != self.map.BLOCKED, "invalid starting location"
         self.map.visit(start[0], start[1])
 
 
@@ -68,12 +71,19 @@ class DiscreteSquareMapEnv():
         return self.map.data.copy()
 
 
-    def local_map(self, width, height):
+    def local_map(self, width, height, center=None):
         assert width % 2 == 1, "width must be an odd number"
         assert height % 2 == 1, "height must be an odd number"
 
-        x_offset = self.agentX - int(height / 2)
-        y_offset = self.agentY - int(width / 2)
+        if center is None:
+            locX = self.agentX
+            locY = self.agentY
+        else:
+            locX = center[0]
+            locY = center[1]
+
+        x_offset = locX - int(height / 2)
+        y_offset = locY - int(width / 2)
 
         lmap = np.zeros((height, width), dtype=int)
 
@@ -167,6 +177,8 @@ class DiscreteSquareMapEnv():
 
         self.agent_episode.append(action)
 
+        self.last_action = action
+
         return
 
 
@@ -187,7 +199,7 @@ class DiscreteSquareMapEnv():
 
 
 def main():
-    env = DiscreteSquareMapEnv(map_dim=(6, 6), block_area=((1, 2), (3, 3)))
+    env = DiscreteSquareMapEnv(map_dim=(6, 6), block_area=(((1, 2), (3, 3)), ((4, 4), (5, 5))))
 
     print("Initial map:")
     env.visualize()
@@ -205,6 +217,7 @@ def main():
     print("Step(DOWN):")
     env.step(1)
     env.visualize()
+
 
 
 if __name__ == '__main__':
