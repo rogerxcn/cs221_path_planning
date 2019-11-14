@@ -199,7 +199,8 @@ class DiscreteSquareMapEnv():
 
 
 def main():
-    env = DiscreteSquareMapEnv(map_dim=(6, 6), block_area=(((1, 2), (3, 3)), ((4, 4), (5, 5))))
+    # env = DiscreteSquareMapEnv(map_dim=(6, 6), block_area=(((1, 2), (3, 3)), ((4, 4), (5, 5))))
+    env = DiscreteSquareMapEnv(map_dim=(5, 5), block_area=(((1, 2), (3, 2)),))
 
     print("Initial map:")
     env.visualize()
