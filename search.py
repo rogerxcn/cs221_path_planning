@@ -53,12 +53,14 @@ def local_map_approx_search(aaa):
       a=getAction(pp,aaa.lmapsize*aaa.lmapsize-1)
       aaaa.append(aaa.env.agent_location())
       aaa.env.step(a)
+      #print(aaaa)
   aaaa.append(aaa.env.agent_location())
   return aaaa
     
 def main():
-  a=ppp((5,5),(((1, 2), (3, 2)),),(0,0))
+  a=ppp((5,5),None,(0,0))
   print(local_map_approx_search(a))
+  print(a.env.agent_distance,a.env.agent_turns)
 
 
 
