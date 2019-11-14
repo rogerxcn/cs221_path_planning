@@ -50,11 +50,15 @@ def exptimax(ppp,ddd):
 
     
 def main():
-  a=ppp((5,5),(((1,2), (3,2)),),(0,0))
+  a=ppp((5,5),None,(0,0))
+  aa=[]
   while not a.end():
     action=exptimax(a,9)
-    print(action)
+    aa.append(a.env.agent_location())
     a.env.step(action)
+    print(action)
+  aa.append(a.env.agent_location())
+  print(aa)
 
 
 
