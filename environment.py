@@ -89,7 +89,7 @@ class DiscreteSquareMapEnv():
 
         for i in range(x_offset, x_offset + height):
             for j in range(y_offset, y_offset + width):
-                lmap[i][j] = self.map.access(i, j)
+                lmap[i-x_offset][j-y_offset] = self.map.access(i, j)
 
         return lmap.copy()
 
@@ -203,6 +203,7 @@ def main():
 
     print("Initial map:")
     env.visualize()
+    print(env.local_map(3, 3))
 
     print("Step(DOWN):")
     env.step(1)
