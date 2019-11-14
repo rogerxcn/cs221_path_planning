@@ -24,11 +24,6 @@ class ppp():
     return a
 
 
-
-
-
-
-
 def exptimax(ppp,ddd):
   def getAction(pp,dd):
     def recurse(s,d):
@@ -58,7 +53,7 @@ def exptimax(ppp,ddd):
 def main():
   a=ppp()
   while not a.end():
-    action=exptimax(a,10)
+    action=exptimax(a,9)
     print(action)
     a.env.step(action)
 
