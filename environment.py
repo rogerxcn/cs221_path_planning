@@ -71,12 +71,19 @@ class DiscreteSquareMapEnv():
         return self.map.data.copy()
 
 
-    def local_map(self, width, height):
+    def local_map(self, width, height, center=None):
         assert width % 2 == 1, "width must be an odd number"
         assert height % 2 == 1, "height must be an odd number"
 
-        x_offset = self.agentX - int(height / 2)
-        y_offset = self.agentY - int(width / 2)
+        if center is None:
+            locX = self.agentX
+            locY = self.agentY
+        else:
+            locX = center[0]
+            locY = center[1]
+
+        x_offset = locX - int(height / 2)
+        y_offset = locY - int(width / 2)
 
         lmap = np.zeros((height, width), dtype=int)
 
