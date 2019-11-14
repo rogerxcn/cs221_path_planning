@@ -14,7 +14,7 @@ class ppp():
       return 0
 
   def reward(self):
-    return -(self.env.agent_turns+self.env.agent_distance)
+    return -(self.env.agent_turns+self.env.agent_distance)-100*self.env.num_unvisited_nodes()
   
   def getLegalActions(self):
     return self.env.available_actions()
@@ -30,7 +30,7 @@ def local_map_approx_search(aaa):
             if s.end():
                 return s.reward()
             elif d==0:
-                return -100000
+                return s.reward()
             else:
                 f=-float (' inf ')
                 for a in s.getLegalActions():
@@ -46,18 +46,18 @@ def local_map_approx_search(aaa):
                 f=tempt
                 astore=a
         return astore
-    while(aaa.end!=0):
+    while(aaa.end()!=1):
         pp=ppp()
         pp.env.map.data=aaa.env.local_map(aaa.lmapsize,aaa.lmapsize)
-        print(pp.env.map.data)
         a=getAction(pp,aaa.lmapsize*aaa.lmapsize-1)
         print(a)
         aaa.env.step(a)
 
     
 def main():
-  a=ppp((5,5),None,(0,0))
+  a=ppp((5,5),(((1,1), (3,3)),),(0,0))
   local_map_approx_search(a)
+
 
 
 

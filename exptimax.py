@@ -1,10 +1,9 @@
-from util import manhattanDistance
 import environment
 import copy
 
 class ppp():
-  def __init__(self):
-    self.env=environment.DiscreteSquareMapEnv()
+  def __init__(self,map_dim=(3, 3), block_area=None, start=(1, 1)):
+    self.env=environment.DiscreteSquareMapEnv(map_dim,block_area,start)
   
   def end(self):
     if self.env.num_unvisited_nodes()==0:
@@ -51,7 +50,7 @@ def exptimax(ppp,ddd):
 
     
 def main():
-  a=ppp()
+  a=ppp((5,5),(((1,2), (3,2)),),(0,0))
   while not a.end():
     action=exptimax(a,9)
     print(action)
