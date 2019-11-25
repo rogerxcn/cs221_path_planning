@@ -41,7 +41,11 @@ class DiscreteSquareMap:
 
 
 class DiscreteSquareMapEnv():
-    def __init__(self, map_dim=(5, 5), block_area=None, start=(0, 0)):
+    def __init__(self, map_dim=(5, 5), block_area=None, start=(0, 0), preset=None):
+        if preset is not None:
+            self.preset_map(preset)
+            return
+
         self.map = DiscreteSquareMap(map_dim[0], map_dim[1])
 
         if block_area is not None:
@@ -65,6 +69,21 @@ class DiscreteSquareMapEnv():
 
         assert self.map.access(start[0], start[1]) != self.map.BLOCKED, "invalid starting location"
         self.map.visit(start[0], start[1])
+
+
+    def preset_map(self, id):
+        if id == 1:
+            self.__init__((5,5), (((1,1), (3,3)),), (0,0))
+        if id == 2:
+            self.__init__((5,5), (((1,2), (3,2)),), (0,0))
+        if id == 3:
+            self.__init__((5,5), None, (0,0))
+        if id == 4:
+            self.__init__((10,3), (((0, 3), (0, 6)), ((2, 3), (2, 6))))
+        if id == 5:
+            self.__init__((10,4), (((0, 3), (0, 6)), ((3, 3), (3, 6))))
+        if id == 6:
+            self.__init__((10,10), (((6, 0), (9, 3)), ((0, 4), (2, 9))))
 
 
     def entire_map(self):
@@ -194,31 +213,18 @@ class DiscreteSquareMapEnv():
 
     def visualize(self):
         temp = self.map.data.copy().astype(str)
+        temp[temp == '-1'] = 'B'
         temp[self.agentX][self.agentY] = 'A'
         print(temp)
 
 
 def main():
     # env = DiscreteSquareMapEnv(map_dim=(6, 6), block_area=(((1, 2), (3, 3)), ((4, 4), (5, 5))))
-    env = DiscreteSquareMapEnv(map_dim=(5, 5), block_area=(((1, 2), (3, 2)),))
+    env = DiscreteSquareMapEnv(preset=6)
 
     print("Initial map:")
     env.visualize()
     print(env.local_map(3, 3))
-
-    print("Step(DOWN):")
-    env.step(1)
-    env.visualize()
-
-    print("Step(RIGHT):")
-    env.step(3)
-    env.visualize()
-
-    print(env.num_unvisited_nodes())
-
-    print("Step(DOWN):")
-    env.step(1)
-    env.visualize()
 
 
 
