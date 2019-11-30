@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-import environment as env 
+import environment as env
 
 # Represents a motion planning problem to be solved using A*
 class AStar(object):
@@ -77,15 +77,15 @@ class AStar(object):
         delta = self.resolution
         dx = [0., 0., -delta, delta, delta, delta, -delta, -delta]
         dy = [-delta, delta, 0., 0., -delta, delta, -delta, delta]
-        
+
         neighbors = []
         for i in range(8):
             neighbor = self.snap_to_grid((x0+dx[i], y0+dy[i]))
             if self.is_free(neighbor):
                 neighbors.append(neighbor)
-        
+
         return neighbors
-        
+
     # Gets the state in open_set that has the lowest f_score
     # INPUT: None
     # OUTPUT: A tuple, the state found in open_set that has the lowest f_score
@@ -136,24 +136,24 @@ class AStar(object):
             if curr == self.x_goal:
                 self.path = self.reconstruct_path()
                 return True
-        
+
             self.open_set.remove(curr)
             self.closed_set.append(curr)
-            
+
             for neighbor in self.get_neighbors(curr):
                 if neighbor in self.closed_set:
                     continue
-                
+
                 g = self.g_score[curr] + self.distance(curr, neighbor)
                 if neighbor not in self.open_set:
                     self.open_set.append(neighbor)
                 elif g > self.g_score[neighbor]:
                     continue
-                    
+
                 self.came_from[neighbor] = curr
                 self.g_score[neighbor] = g
-                self.f_score[neighbor] = g + self.distance(neighbor, self.x_goal) 
-                     
+                self.f_score[neighbor] = g + self.distance(neighbor, self.x_goal)
+
         return False
 
 # A 2D state space grid with a set of rectangular obstacles. The grid is fully deterministic
@@ -214,8 +214,8 @@ class DetOccupancyGrid2D(object):
 #     x_init = tuple(np.random.randint(0,width-2,2).tolist())
 #     x_goal = tuple(np.random.randint(0,height-2,2).tolist())
 
-# test_env = env.DiscreteSquareMapEnv(map_dim=(6, 6), block_area=(((1, 2), (3, 3)), ((4, 4), (5, 5))))
-test_env = env.DiscreteSquareMapEnv(map_dim=(5, 5), block_area=((None))
+test_env = env.DiscreteSquareMapEnv(map_dim=(6, 6), block_area=(((1, 2), (3, 3)), ((4, 4), (5, 5))))
+# test_env = env.DiscreteSquareMapEnv(map_dim=(5, 5), block_area=((None))
 # test_env = env.DiscreteSquareMapEnv(map_dim=(5, 5), block_area=(((1, 2), (3, 2)),))
 width = test_env.map.width+1
 height = test_env.map.height+1
@@ -223,9 +223,9 @@ obstacles = [((1,1.5), (3,2.5))]
 occupancy = DetOccupancyGrid2D(width, height, obstacles)
 action = test_env.available_actions()[0]
 iteration = 0
-# action list 
+# action list
 act_list = []
-# when agent visited all nearby cells, 
+# when agent visited all nearby cells,
 # record current location and new unvisitied location in this list.
 jump_node_list = []
 # keep looping until all cells visieted
@@ -244,11 +244,11 @@ while test_env.num_unvisited_nodes() != 0:
         test_env.step(action)
         iteration += 1
         # select next action only needed when cannot use same action
-        # strategy: 
+        # strategy:
         # 1. check all available actions assigne the one
         #    leads to unvisit cell.
         # 2. if all near by cell are visited, agent go to new unvisit location using A*
-        #    and start step through the map 
+        #    and start step through the map
         next_x,next_y = test_env.next_location(action)
         condition = test_env.map.access(next_x,next_y)
         if action not in test_env.available_actions() or condition != test_env.map.UNVISITED:
@@ -270,7 +270,7 @@ while test_env.num_unvisited_nodes() != 0:
                     x_goal = test_env.agent_location()
                     jump_node_list.append(x_init)
                     jump_node_list.append(x_goal)
-                    
+
                     astar = AStar((0, 0), (width, height), x_init, x_goal, occupancy)
                     # print(np.array(astar.path) * astar.resolution)
                     if not astar.solve():
@@ -296,7 +296,8 @@ print(act_list)
 print(jump_node_list)
 print(test_env.num_turns())
 print(test_env.travel_distance())
-test_env.visualize()
+# test_env.visualize()
+test_env.plot_path()
 # x_init = (1,1)
 # x_goal = (3,3)
 # astar = AStar((0, 0), (width, height), x_init, x_goal, occupancy)

@@ -6,7 +6,7 @@ class ppp():
   def __init__(self,map_dim=(3, 3), block_area=None, start=(1, 1)):
     self.env=environment.DiscreteSquareMapEnv(map_dim,block_area,start)
     self.lmapsize=3
-  
+
   def end(self):
     if self.env.num_unvisited_nodes()==0:
       return 1
@@ -15,7 +15,7 @@ class ppp():
 
   def reward(self):
     return -(self.env.agent_turns+self.env.agent_distance)-100*self.env.num_unvisited_nodes()
-  
+
   def getLegalActions(self):
     return self.env.available_actions()
 
@@ -56,7 +56,7 @@ def local_map_approx_search(aaa):
       #print(aaaa)
   aaaa.append(aaa.env.agent_location())
   return aaaa
-    
+
 def main():
   a=ppp((5,5),None,(0,0))
   print(local_map_approx_search(a))

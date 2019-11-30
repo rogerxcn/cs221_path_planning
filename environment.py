@@ -277,11 +277,12 @@ class DiscreteSquareMapEnv():
         plt.plot([0, 0, self.map.height, self.map.height, 0], [0, self.map.width, self.map.width, 0, 0], color="brown", linewidth=5, zorder=1)
 
         ## plot obstacles
-        for b in self.block_area:
-            blk = patches.Rectangle(b[0], b[1][0] - b[0][0] + 1, b[1][1] - b[0][1] + 1, facecolor="grey", linewidth=5, zorder=1)
-            bd = patches.Rectangle(b[0], b[1][0] - b[0][0] + 1, b[1][1] - b[0][1] + 1, color="brown", linewidth=5, fill=False, zorder=1)
-            ax.add_patch(blk)
-            ax.add_patch(bd)
+        if self.block_area is not None:
+            for b in self.block_area:
+                blk = patches.Rectangle(b[0], b[1][0] - b[0][0] + 1, b[1][1] - b[0][1] + 1, facecolor="grey", linewidth=5, zorder=1)
+                bd = patches.Rectangle(b[0], b[1][0] - b[0][0] + 1, b[1][1] - b[0][1] + 1, color="brown", linewidth=5, fill=False, zorder=1)
+                ax.add_patch(blk)
+                ax.add_patch(bd)
 
 
         ## plot path
