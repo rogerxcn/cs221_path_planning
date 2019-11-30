@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 import copy
 
 class DiscreteSquareMap:
@@ -56,6 +58,14 @@ class DiscreteSquareMapCounter:
         assert self.data[locX][locY] != self.BLOCKED
         self.data[locX][locY] += 1
 
+    def get_data(self, max_count=None):
+        data = self.data.copy()
+
+        if max_count is not None:
+            data[self.data > max_count] = max_count
+
+        return data
+
     def visualize(self):
         print(self.data)
 
@@ -86,6 +96,8 @@ class DiscreteSquareMapEnv():
         self.agent_turns = 0
         self.agent_distance = 1
         self.agent_episode = []
+        self.path = [[self.agentX, self.agentY]]
+        self.block_area = block_area
 
         self.last_action = None
 
@@ -221,6 +233,7 @@ class DiscreteSquareMapEnv():
             self.agent_turns += 1
 
         self.agent_episode.append(action)
+        self.path.append([self.agentX, self.agentY])
 
         self.last_action = action
 
@@ -244,25 +257,79 @@ class DiscreteSquareMapEnv():
         print(temp)
 
 
+    def plot_path(self):
+        plt.figure(figsize=(15, 15), dpi=80)
+
+        ax = plt.gca()
+        ax.grid(zorder=0)
+        ax.set_axisbelow(True)
+        ax.set_aspect('equal', 'box')
+
+        path = np.array(self.path)
+
+        ## plot border
+        plt.xlim([0, self.map.height])
+        plt.ylim([0, self.map.width])
+
+        plt.xticks(np.arange(0, self.map.height+ .1, 1.0))
+        plt.yticks(np.arange(0, self.map.width+ .1, 1.0))
+
+        plt.plot([0, 0, self.map.height, self.map.height, 0], [0, self.map.width, self.map.width, 0, 0], color="brown", linewidth=5, zorder=1)
+
+        ## plot obstacles
+        for b in self.block_area:
+            blk = patches.Rectangle(b[0], b[1][0] - b[0][0] + 1, b[1][1] - b[0][1] + 1, facecolor="grey", linewidth=5, zorder=1)
+            bd = patches.Rectangle(b[0], b[1][0] - b[0][0] + 1, b[1][1] - b[0][1] + 1, color="brown", linewidth=5, fill=False, zorder=1)
+            ax.add_patch(blk)
+            ax.add_patch(bd)
+
+
+        ## plot path
+        for i in range(len(path)-1):
+            offset = 0.5
+            x1 = path[i][0] + offset
+            x2 = path[i+1][0] + offset
+            y1 = path[i][1] + offset
+            y2 = path[i+1][1] + offset
+            plt.plot([x1, x2], [y1, y2], color="blue", linewidth=40, alpha=0.4, zorder=1)
+
+        for i in range(len(path)-1):
+            offset = 0.5
+            x1 = path[i][0] + offset
+            x2 = path[i+1][0] + offset
+            y1 = path[i][1] + offset
+            y2 = path[i+1][1] + offset
+            plt.arrow(x1, y1, x2-x1, y2-y1, head_width=0.1, head_length=0.1, fc='white', ec='white', alpha=0.4, zorder=2)
+
+        plt.show()
+
+
 def main():
     # env = DiscreteSquareMapEnv(map_dim=(6, 6), block_area=(((1, 2), (3, 3)), ((4, 4), (5, 5))))
     env = DiscreteSquareMapEnv(preset=6)
 
-    print("Initial map:")
-    env.visualize()
-    print(env.local_map(3, 3))
+    # print("Initial map:")
+    # env.visualize()
+    # print(env.local_map(3, 3))
 
     env.step(env.DOWN)
-    env.visualize()
-    env.counter.visualize()
+    # env.visualize()
+    # env.counter.visualize()
 
     env.step(env.RIGHT)
-    env.visualize()
-    env.counter.visualize()
+    # env.visualize()
+    # env.counter.visualize()
 
     env.step(env.LEFT)
+
+    for i in range(40):
+        env.step(env.DOWN)
+        env.step(env.UP)
+
     env.visualize()
-    env.counter.visualize()
+    print(env.counter.get_data(max_count=10))
+
+    env.plot_path()
 
 
 
