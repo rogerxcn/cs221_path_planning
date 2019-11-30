@@ -40,14 +40,40 @@ class DiscreteSquareMap:
         self.data[locX][locY] = self.VISITED
 
 
+class DiscreteSquareMapCounter:
+    def __init__(self, map):
+        self.BLOCKED = -1
+
+        self.width = map.width
+        self.height = map.height
+
+        self.data = map.data.copy()
+
+    def update(self, map):
+        self.data = map.data.copy()
+
+    def visit(self, locX, locY):
+        assert self.data[locX][locY] != self.BLOCKED
+        self.data[locX][locY] += 1
+
+    def visualize(self):
+        print(self.data)
+
+
 class DiscreteSquareMapEnv():
-    def __init__(self, map_dim=(5, 5), block_area=None, start=(0, 0)):
+    def __init__(self, map_dim=(5, 5), block_area=None, start=(0, 0), preset=None):
+        if preset is not None:
+            self.preset_map(preset)
+            return
+
         self.map = DiscreteSquareMap(map_dim[0], map_dim[1])
 
         if block_area is not None:
             assert isinstance(block_area, tuple), "block_area must be a tuple of ((x1, y1), (x2, y2))"
             for i, v in enumerate(block_area):
                 self.map.block_area(v[0], v[1])
+
+        self.counter = DiscreteSquareMapCounter(self.map)
 
         self.UP = 0
         self.DOWN = 1
@@ -64,7 +90,24 @@ class DiscreteSquareMapEnv():
         self.last_action = None
 
         assert self.map.access(start[0], start[1]) != self.map.BLOCKED, "invalid starting location"
+
         self.map.visit(start[0], start[1])
+        self.counter.visit(start[0], start[1])
+
+
+    def preset_map(self, id):
+        if id == 1:
+            self.__init__((5,5), (((1,1), (3,3)),), (0,0))
+        if id == 2:
+            self.__init__((5,5), (((1,2), (3,2)),), (0,0))
+        if id == 3:
+            self.__init__((5,5), None, (0,0))
+        if id == 4:
+            self.__init__((10,3), (((0, 3), (0, 6)), ((2, 3), (2, 6))))
+        if id == 5:
+            self.__init__((10,4), (((0, 3), (0, 6)), ((3, 3), (3, 6))))
+        if id == 6:
+            self.__init__((10,10), (((6, 0), (9, 3)), ((0, 4), (2, 9))))
 
 
     def entire_map(self):
@@ -170,6 +213,8 @@ class DiscreteSquareMapEnv():
         self.agentX, self.agentY = self.next_location(action)
 
         self.map.visit(self.agentX, self.agentY)
+        self.counter.visit(self.agentX, self.agentY)
+
         self.agent_distance += 1
 
         if self.last_action is not None and self.last_action != action:
@@ -194,31 +239,30 @@ class DiscreteSquareMapEnv():
 
     def visualize(self):
         temp = self.map.data.copy().astype(str)
+        temp[temp == '-1'] = 'B'
         temp[self.agentX][self.agentY] = 'A'
         print(temp)
 
 
 def main():
     # env = DiscreteSquareMapEnv(map_dim=(6, 6), block_area=(((1, 2), (3, 3)), ((4, 4), (5, 5))))
-    env = DiscreteSquareMapEnv(map_dim=(5, 5), block_area=(((1, 2), (3, 2)),))
+    env = DiscreteSquareMapEnv(preset=6)
 
     print("Initial map:")
     env.visualize()
     print(env.local_map(3, 3))
 
-    print("Step(DOWN):")
-    env.step(1)
+    env.step(env.DOWN)
     env.visualize()
+    env.counter.visualize()
 
-    print("Step(RIGHT):")
-    env.step(3)
+    env.step(env.RIGHT)
     env.visualize()
+    env.counter.visualize()
 
-    print(env.num_unvisited_nodes())
-
-    print("Step(DOWN):")
-    env.step(1)
+    env.step(env.LEFT)
     env.visualize()
+    env.counter.visualize()
 
 
 
