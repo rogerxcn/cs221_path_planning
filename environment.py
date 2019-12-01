@@ -273,7 +273,7 @@ class DiscreteSquareMapEnv():
         print(temp)
 
 
-    def plot_path(self):
+    def plot_path(self, label_data=None):
         plt.figure(figsize=(15, 15), dpi=80)
 
         ax = plt.gca()
@@ -300,6 +300,12 @@ class DiscreteSquareMapEnv():
                 ax.add_patch(blk)
                 ax.add_patch(bd)
 
+        ## plot grid label
+        if label_data is not None:
+            for i in range(self.map.height):
+                for j in range(self.map.width):
+                    plt.text(i+0.5, j+0.5, label_data[i][j], fontsize=24, zorder=2, alpha=0.5)
+
 
         ## plot path
         if path is not None:
@@ -317,7 +323,7 @@ class DiscreteSquareMapEnv():
                 x2 = path[i+1][0] + offset
                 y1 = path[i][1] + offset
                 y2 = path[i+1][1] + offset
-                plt.arrow(x1, y1, x2-x1, y2-y1, head_width=0.1, head_length=0.1, fc='white', ec='white', alpha=0.2, zorder=2)
+                plt.arrow(x1, y1, x2-x1, y2-y1, head_width=0.1, head_length=0.1, fc='white', ec='white', alpha=0.2, zorder=4)
 
         plt.show()
 
