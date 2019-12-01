@@ -120,6 +120,22 @@ class DiscreteSquareMapEnv():
             self.__init__((10,4), (((0, 3), (0, 6)), ((3, 3), (3, 6))))
         if id == 6:
             self.__init__((10,10), (((6, 0), (9, 3)), ((0, 4), (2, 9))))
+        if id == 7:
+            self.__init__((6,6),(((1,2),(3,3)),((4,4),(5,5))),(0,0))
+
+        if id == 101:
+            self.__init__((10,10),
+                            ( ((1,1), (1,2)),
+                              ((1,2), (3,2)),
+                              ((6,1), (8,1)),
+                              ((8,1), (8,3)),
+                              ((6,3), (8,3)),
+                              ((3,4), (4,4)),
+                              ((4,4), (4,5)),
+                              ((6,6), (6,7)),
+                              ((1,7), (2,8)),
+                            ),
+                          (0,0))
 
 
     def entire_map(self):
@@ -286,21 +302,22 @@ class DiscreteSquareMapEnv():
 
 
         ## plot path
-        for i in range(len(path)-1):
-            offset = 0.5
-            x1 = path[i][0] + offset
-            x2 = path[i+1][0] + offset
-            y1 = path[i][1] + offset
-            y2 = path[i+1][1] + offset
-            plt.plot([x1, x2], [y1, y2], color="blue", linewidth=40, alpha=0.4, zorder=1)
+        if path is not None:
+            for i in range(len(path)-1):
+                offset = 0.5
+                x1 = path[i][0] + offset
+                x2 = path[i+1][0] + offset
+                y1 = path[i][1] + offset
+                y2 = path[i+1][1] + offset
+                plt.plot([x1, x2], [y1, y2], color="blue", linewidth=40, alpha=0.4, zorder=1)
 
-        for i in range(len(path)-1):
-            offset = 0.5
-            x1 = path[i][0] + offset
-            x2 = path[i+1][0] + offset
-            y1 = path[i][1] + offset
-            y2 = path[i+1][1] + offset
-            plt.arrow(x1, y1, x2-x1, y2-y1, head_width=0.1, head_length=0.1, fc='white', ec='white', alpha=0.4, zorder=2)
+            for i in range(len(path)-1):
+                offset = 0.5
+                x1 = path[i][0] + offset
+                x2 = path[i+1][0] + offset
+                y1 = path[i][1] + offset
+                y2 = path[i+1][1] + offset
+                plt.arrow(x1, y1, x2-x1, y2-y1, head_width=0.1, head_length=0.1, fc='white', ec='white', alpha=0.2, zorder=2)
 
         plt.show()
 
