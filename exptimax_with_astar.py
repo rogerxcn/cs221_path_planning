@@ -72,23 +72,23 @@ def main():
     X,Y = a.env.next_location(action)
     m = a.env.entire_map()
     if m[X][Y] == a.env.map.VISITED:
-      newx,newy = a.env.remaining_nodes()[0]
       x_init = a.env.agent_location()
-      a.env.agentX = newx
-      a.env.agentY = newy
-      a.env.map.visit(newx,newy)
-      x_goal = a.env.agent_location()
+      x_goal = a.env.remaining_nodes()[0]
       Astar = astar.AStar((0, 0), (a.env.map.width, a.env.map.height), x_init, x_goal, occupancy)
       if not Astar.solve():
         print("Not Solve")
       else:
-        a.env.agent_distance += len(Astar.path)
         for j in range(len(Astar.path)-1):
           a1,b1 = Astar.path[j]
           a2,b2 = Astar.path[j+1]
-          if a1 != a2 and b1 != b2:
-            a.env.agent_turns += 1
-      a.env.path.extend(Astar.path)
+          if a2 == a1-1 and b1 == b2:
+            a.env.step(a.env.UP)
+          elif a2 == a1+1 and b1 == b2:
+            a.env.step(a.env.DOWN)
+          elif a2 == a1 and b2 == b1-1:
+            a.env.step(a.env.LEFT)
+          elif a2 == a1 and b2 == b1+1:
+            a.env.step(a.env.RIGHT)
       # aa.append(a.env.agent_location())
     else:
       aa.append(a.env.agent_location())

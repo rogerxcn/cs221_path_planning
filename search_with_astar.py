@@ -57,23 +57,23 @@ def local_map_approx_search(aaa):
       X,Y = aaa.env.next_location(a)
       m = aaa.env.entire_map()
       if m[X][Y] == aaa.env.map.VISITED:
-        newx,newy = aaa.env.remaining_nodes()[0]
         x_init = aaa.env.agent_location()
-        aaa.env.agentX = newx
-        aaa.env.agentY = newy
-        aaa.env.map.visit(newx,newy)
-        x_goal = aaa.env.agent_location()
+        x_goal = aaa.env.remaining_nodes()[0]
         Astar = astar.AStar((0, 0), (aaa.env.map.width, aaa.env.map.height), x_init, x_goal, occupancy)
         if not Astar.solve():
           print("Not Solve")
         else:
-          aaa.env.agent_distance += len(Astar.path)
           for j in range(len(Astar.path)-1):
             a1,b1 = Astar.path[j]
             a2,b2 = Astar.path[j+1]
-            if a1 != a2 and b1 != b2:
-              aaa.env.agent_turns += 1
-        aaa.env.path.extend(Astar.path)
+            if a2 == a1-1 and b1 == b2:
+              aaa.env.step(aaa.env.UP)
+            elif a2 == a1+1 and b1 == b2:
+              aaa.env.step(aaa.env.DOWN)
+            elif a2 == a1 and b2 == b1-1:
+              aaa.env.step(aaa.env.LEFT)
+            elif a2 == a1 and b2 == b1+1:
+              aaa.env.step(aaa.env.RIGHT)
       # aa.append(a.env.agent_location())
       else:
         aaaa.append(aaa.env.agent_location())

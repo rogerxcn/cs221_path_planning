@@ -75,9 +75,10 @@ class AStar(object):
     def get_neighbors(self, x):
         x0, y0 = x
         delta = self.resolution
-        dx = [0., 0., -delta, delta, delta, delta, -delta, -delta]
-        dy = [-delta, delta, 0., 0., -delta, delta, -delta, delta]
-
+        # dx = [0., 0., -delta, delta, delta, delta, -delta, -delta]
+        # dy = [-delta, delta, 0., 0., -delta, delta, -delta, delta]
+        dx = [0., 0., -delta, delta, 0, 0, 0, 0]
+        dy = [-delta, delta, 0., 0., 0, 0, 0, 0]
         neighbors = []
         for i in range(8):
             neighbor = self.snap_to_grid((x0+dx[i], y0+dy[i]))
@@ -297,7 +298,7 @@ print(jump_node_list)
 print(test_env.num_turns())
 print(test_env.travel_distance())
 # test_env.visualize()
-test_env.plot_path()
+## test_env.plot_path()
 # x_init = (1,1)
 # x_goal = (3,3)
 # astar = AStar((0, 0), (width, height), x_init, x_goal, occupancy)

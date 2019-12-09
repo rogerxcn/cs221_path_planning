@@ -274,7 +274,7 @@ class DiscreteSquareMapEnv():
 
 
     def plot_path(self, label_data=None):
-        plt.figure(figsize=(15, 15), dpi=80)
+        plt.figure(figsize=(15, 15), dpi=40)
 
         ax = plt.gca()
         ax.grid(zorder=0)
