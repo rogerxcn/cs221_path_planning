@@ -1,6 +1,6 @@
 {
-    "turn": 19,
-    "dist": 43,
-    "notes": "Backward",
-    "run_time": 0.0032968521118164062
+    "turn": 32,
+    "dist": 104,
+    "notes": "A*",
+    "run_time": 0.02845144271850586
 }

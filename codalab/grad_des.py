@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import environment
 
 def label(env, end):
@@ -179,7 +181,7 @@ def codalab_run(run_id):
     if run_id == 0:
         ## H shape map
         env = environment.DiscreteSquareMapEnv(preset=5)
-        label_data = label(env, end=(1, 5))
+        label_data = label(env, end=(2, 5))
         desc_agent(env, label_data, mode="back")
 
         stats = {
@@ -193,7 +195,7 @@ def codalab_run(run_id):
     if run_id == 1:
         ## H shape map
         env = environment.DiscreteSquareMapEnv(preset=5)
-        label_data = label(env, end=(1, 5))
+        label_data = label(env, end=(1, 4))
         desc_agent(env, label_data, mode="astar")
 
         stats = {
