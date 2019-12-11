@@ -2,6 +2,7 @@ import time
 import sys
 import grad_des
 import json
+import astar
 
 def run_experiment(algo_name, run_id, dump_json):
     start = time.time()
@@ -17,7 +18,8 @@ def run_experiment(algo_name, run_id, dump_json):
 
     if algo_name == "grad_des":
         stats = grad_des.codalab_run(run_id)
-
+    if algo_name == "astar":
+        stats = astar.codalab_run(run_id)
 
     ## End of your algorithms
 
@@ -33,6 +35,7 @@ def run_experiment(algo_name, run_id, dump_json):
         f = open("stats.json","w")
         f.write(js)
         f.close()
+    
 
 
 def main():

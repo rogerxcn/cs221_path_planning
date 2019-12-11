@@ -1,6 +1,6 @@
 {
-    "turn": 32,
-    "dist": 104,
-    "notes": "A*",
-    "run_time": 0.02845144271850586
+    "turn": 13,
+    "dist": 64,
+    "notes": "Pure Astar",
+    "run_time": 0.004137754440307617
 }
