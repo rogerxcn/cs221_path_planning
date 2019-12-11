@@ -52,20 +52,9 @@ def exptimax(ppp,ddd):
     
 def main():
   # a=ppp((5,5),(((1,1), (3,3)),),(0,0))
-  a = ppp((10,10),
-                            ( ((1,1), (1,2)),
-                              ((1,2), (3,2)),
-                              ((6,1), (8,1)),
-                              ((8,1), (8,3)),
-                              ((6,3), (8,3)),
-                              ((3,4), (4,4)),
-                              ((4,4), (4,5)),
-                              ((6,6), (6,7)),
-                              ((1,7), (2,8)),
-                            ),
-                          (0,0))
+  a = ppp((10,4), (((0, 3), (0, 6)), ((3, 3), (3, 6))))
   obstacles = list(a.env.block_area)
-  occupancy = astar.DetOccupancyGrid2D(a.env.map.width, a.env.map.height, obstacles)
+  occupancy = astar.DetOccupancyGrid2D(a.env.map.height, a.env.map.width, obstacles)
   aa=[]
   while not a.end():
     action=exptimax(a,9)
@@ -74,7 +63,7 @@ def main():
     if m[X][Y] == a.env.map.VISITED:
       x_init = a.env.agent_location()
       x_goal = a.env.remaining_nodes()[0]
-      Astar = astar.AStar((0, 0), (a.env.map.width, a.env.map.height), x_init, x_goal, occupancy)
+      Astar = astar.AStar((0, 0), (a.env.map.height, a.env.map.width), x_init, x_goal, occupancy)
       if not Astar.solve():
         print("Not Solve")
       else:

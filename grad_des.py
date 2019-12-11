@@ -177,11 +177,11 @@ def desc_agent(env, label_data, mode=None):
 
 def main():
     # env = DiscreteSquareMapEnv(map_dim=(6, 6), block_area=(((1, 2), (3, 3)), ((4, 4), (5, 5))))
-    env = environment.DiscreteSquareMapEnv(preset=101)
+    env = environment.DiscreteSquareMapEnv(preset=5)
 
     print(env.map.data)
 
-    label_data = label(env, end=(5, 5))
+    label_data = label(env, end=(1,5))
 
     print(label_data)
 
@@ -189,6 +189,7 @@ def main():
     # desc_agent(env, label_data)
 
     env.plot_path(label_data=label_data)
+    env.plot_path()
 
 if __name__ == '__main__':
     main()

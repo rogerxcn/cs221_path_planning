@@ -215,12 +215,12 @@ class DetOccupancyGrid2D(object):
 #     x_init = tuple(np.random.randint(0,width-2,2).tolist())
 #     x_goal = tuple(np.random.randint(0,height-2,2).tolist())
 
-test_env = env.DiscreteSquareMapEnv(map_dim=(6, 6), block_area=(((1, 2), (3, 3)), ((4, 4), (5, 5))))
+test_env = env.DiscreteSquareMapEnv(preset=5)
 # test_env = env.DiscreteSquareMapEnv(map_dim=(5, 5), block_area=((None))
 # test_env = env.DiscreteSquareMapEnv(map_dim=(5, 5), block_area=(((1, 2), (3, 2)),))
-width = test_env.map.width+1
-height = test_env.map.height+1
-obstacles = [((1,1.5), (3,2.5))]
+width = test_env.map.height
+height = test_env.map.width
+obstacles = list(test_env.block_area)
 occupancy = DetOccupancyGrid2D(width, height, obstacles)
 action = test_env.available_actions()[0]
 iteration = 0
@@ -262,13 +262,8 @@ while test_env.num_unvisited_nodes() != 0:
                     break
                 # cannot keep straiht line, nearby cells are visited
                 elif i == len(test_env.available_actions())-1 and len(test_env.remaining_nodes()) > 0:
-                    x,y = test_env.remaining_nodes()[0]
                     x_init = test_env.agent_location()
-                    test_env.visualize()
-                    test_env.agentX = x
-                    test_env.agentY = y
-                    test_env.map.visit(x,y)
-                    x_goal = test_env.agent_location()
+                    x_goal = test_env.remaining_nodes()[0]
                     jump_node_list.append(x_init)
                     jump_node_list.append(x_goal)
 
@@ -281,24 +276,30 @@ while test_env.num_unvisited_nodes() != 0:
                         for j in range(len(astar.path)-1):
                             a1,b1 = astar.path[j]
                             a2,b2 = astar.path[j+1]
-                            if a1 != a2 and b1 != b2:
-                                test_env.agent_turns += 1
+                            if a2 == a1-1 and b1 == b2:
+                                test_env.step(test_env.UP)
+                            elif a2 == a1+1 and b1 == b2:
+                                test_env.step(test_env.DOWN)
+                            elif a2 == a1 and b2 == b1-1:
+                                test_env.step(test_env.LEFT)
+                            elif a2 == a1 and b2 == b1+1:
+                                test_env.step(test_env.RIGHT)
 
                         print(astar.path)
                     test_env.visualize()
                     for j in range(len(test_env.available_actions())):
-                        next_x,next_y = test_env.next_location(test_env.available_actions()[i])
+                        next_x,next_y = test_env.next_location(test_env.available_actions()[j])
                         condition = test_env.map.access(next_x,next_y)
                         # cannot keep straight line, turn available
                         if condition == test_env.map.UNVISITED:
-                            action = test_env.available_actions()[i]
+                            action = test_env.available_actions()[j]
                             break
 print(act_list)
 print(jump_node_list)
 print(test_env.num_turns())
 print(test_env.travel_distance())
 # test_env.visualize()
-## test_env.plot_path()
+# test_env.plot_path()
 # x_init = (1,1)
 # x_goal = (3,3)
 # astar = AStar((0, 0), (width, height), x_init, x_goal, occupancy)
