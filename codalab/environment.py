@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -274,7 +276,7 @@ class DiscreteSquareMapEnv():
 
 
     def plot_path(self, label_data=None):
-        plt.figure(figsize=(15, 15), dpi=40)
+        plt.figure(figsize=(15, 15), dpi=80)
 
         ax = plt.gca()
         ax.grid(zorder=0)
@@ -304,7 +306,7 @@ class DiscreteSquareMapEnv():
         if label_data is not None:
             for i in range(self.map.height):
                 for j in range(self.map.width):
-                    plt.text(i+0.5, j+0.5, label_data[i][j], fontsize=24, zorder=2, alpha=0.5)
+                    plt.text(i+0.4, j+0.4, label_data[i][j], fontsize=24, zorder=2, alpha=0.5)
 
 
         ## plot path
@@ -315,7 +317,7 @@ class DiscreteSquareMapEnv():
                 x2 = path[i+1][0] + offset
                 y1 = path[i][1] + offset
                 y2 = path[i+1][1] + offset
-                plt.plot([x1, x2], [y1, y2], color="blue", linewidth=40, alpha=0.4, zorder=1)
+                plt.plot([x1, x2], [y1, y2], color="blue", linewidth=30, alpha=0.3, zorder=1)
 
             for i in range(len(path)-1):
                 offset = 0.5
@@ -329,33 +331,30 @@ class DiscreteSquareMapEnv():
 
 
 def main():
-    # # env = DiscreteSquareMapEnv(map_dim=(6, 6), block_area=(((1, 2), (3, 3)), ((4, 4), (5, 5))))
+    # env = DiscreteSquareMapEnv(map_dim=(6, 6), block_area=(((1, 2), (3, 3)), ((4, 4), (5, 5))))
     env = DiscreteSquareMapEnv(preset=6)
-    #
-    # # print("Initial map:")
-    # # env.visualize()
-    # # print(env.local_map(3, 3))
-    #
-    # env.step(env.DOWN)
-    # # env.visualize()
-    # # env.counter.visualize()
-    #
-    # env.step(env.RIGHT)
-    # # env.visualize()
-    # # env.counter.visualize()
-    #
-    # env.step(env.LEFT)
-    #
-    # for i in range(40):
-    #     env.step(env.DOWN)
-    #     env.step(env.UP)
-    #
+
+    # print("Initial map:")
     # env.visualize()
-    # print(env.counter.get_data(max_count=10))
-    #
-    # env.plot_path()
+    # print(env.local_map(3, 3))
+
+    env.step(env.DOWN)
+    # env.visualize()
+    # env.counter.visualize()
+
+    env.step(env.RIGHT)
+    # env.visualize()
+    # env.counter.visualize()
+
+    env.step(env.LEFT)
+
+    for i in range(40):
+        env.step(env.DOWN)
+        env.step(env.UP)
 
     env.visualize()
+    print(env.counter.get_data(max_count=10))
+
     env.plot_path()
 
 

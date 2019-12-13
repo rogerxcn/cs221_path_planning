@@ -52,43 +52,32 @@ def exptimax(ppp,ddd):
     
 def main():
   # a=ppp((5,5),(((1,1), (3,3)),),(0,0))
-  a = ppp((10,10),
-                            ( ((1,1), (1,2)),
-                              ((1,2), (3,2)),
-                              ((6,1), (8,1)),
-                              ((8,1), (8,3)),
-                              ((6,3), (8,3)),
-                              ((3,4), (4,4)),
-                              ((4,4), (4,5)),
-                              ((6,6), (6,7)),
-                              ((1,7), (2,8)),
-                            ),
-                          (0,0))
+  a = ppp((10,4), (((0, 3), (0, 6)), ((3, 3), (3, 6))))
   obstacles = list(a.env.block_area)
-  occupancy = astar.DetOccupancyGrid2D(a.env.map.width, a.env.map.height, obstacles)
+  occupancy = astar.DetOccupancyGrid2D(a.env.map.height, a.env.map.width, obstacles)
   aa=[]
   while not a.end():
     action=exptimax(a,9)
     X,Y = a.env.next_location(action)
     m = a.env.entire_map()
     if m[X][Y] == a.env.map.VISITED:
-      newx,newy = a.env.remaining_nodes()[0]
       x_init = a.env.agent_location()
-      a.env.agentX = newx
-      a.env.agentY = newy
-      a.env.map.visit(newx,newy)
-      x_goal = a.env.agent_location()
-      Astar = astar.AStar((0, 0), (a.env.map.width, a.env.map.height), x_init, x_goal, occupancy)
+      x_goal = a.env.remaining_nodes()[0]
+      Astar = astar.AStar((0, 0), (a.env.map.height, a.env.map.width), x_init, x_goal, occupancy)
       if not Astar.solve():
         print("Not Solve")
       else:
-        a.env.agent_distance += len(Astar.path)
         for j in range(len(Astar.path)-1):
           a1,b1 = Astar.path[j]
           a2,b2 = Astar.path[j+1]
-          if a1 != a2 and b1 != b2:
-            a.env.agent_turns += 1
-      a.env.path.extend(Astar.path)
+          if a2 == a1-1 and b1 == b2:
+            a.env.step(a.env.UP)
+          elif a2 == a1+1 and b1 == b2:
+            a.env.step(a.env.DOWN)
+          elif a2 == a1 and b2 == b1-1:
+            a.env.step(a.env.LEFT)
+          elif a2 == a1 and b2 == b1+1:
+            a.env.step(a.env.RIGHT)
       # aa.append(a.env.agent_location())
     else:
       aa.append(a.env.agent_location())

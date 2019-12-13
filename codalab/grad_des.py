@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import environment
 
 def label(env, end):
@@ -170,25 +172,87 @@ def desc_agent(env, label_data, mode=None):
         ep.append(max_a)
         last_a = max_a
 
-    print("# dist - ", env.agent_distance)
-    print("# turns - ", env.agent_turns)
+    # print("# dist - ", env.agent_distance)
+    # print("# turns - ", env.agent_turns)
+
+
+
+def codalab_run(run_id):
+    if run_id == 0:
+        ## H shape map
+        env = environment.DiscreteSquareMapEnv(preset=5)
+        label_data = label(env, end=(2, 5))
+        desc_agent(env, label_data, mode="back")
+
+        stats = {
+                    "turn": env.agent_turns,
+                    "dist": env.agent_distance,
+                    "notes": "Backward"
+                }
+
+        return stats
+
+    if run_id == 1:
+        ## H shape map
+        env = environment.DiscreteSquareMapEnv(preset=5)
+        label_data = label(env, end=(1, 4))
+        desc_agent(env, label_data, mode="astar")
+
+        stats = {
+                    "turn": env.agent_turns,
+                    "dist": env.agent_distance,
+                    "notes": "A*"
+                }
+
+        return stats
+
+    if run_id == 2:
+        ## H shape map
+        env = environment.DiscreteSquareMapEnv(preset=101)
+        label_data = label(env, end=(5, 5))
+        desc_agent(env, label_data, mode="back")
+
+        stats = {
+                    "turn": env.agent_turns,
+                    "dist": env.agent_distance,
+                    "notes": "Backward"
+                }
+
+        return stats
+
+    if run_id == 3:
+        ## H shape map
+        env = environment.DiscreteSquareMapEnv(preset=101)
+        label_data = label(env, end=(5, 5))
+        desc_agent(env, label_data, mode="astar")
+
+        stats = {
+                    "turn": env.agent_turns,
+                    "dist": env.agent_distance,
+                    "notes": "A*"
+                }
+
+        return stats
 
 
 
 def main():
     # env = DiscreteSquareMapEnv(map_dim=(6, 6), block_area=(((1, 2), (3, 3)), ((4, 4), (5, 5))))
-    env = environment.DiscreteSquareMapEnv(preset=5)
-
-    print(env.map.data)
-
-    label_data = label(env, end=(3, 3))
-
+    # env = environment.DiscreteSquareMapEnv(preset=5)
+    #
+    # print(env.map.data)
+    #
+    # label_data = label(env, end=(1, 5))
+    #
     # print(label_data)
     #
     # desc_agent(env, label_data, mode="astar")
     # # desc_agent(env, label_data)
+    #
+    # env.plot_path(label_data=label_data)
 
-    env.plot_path(label_data=None)
+    run_id = int(sys.argv[1])
+    codalab_run(run_id)
 
 if __name__ == '__main__':
     main()
