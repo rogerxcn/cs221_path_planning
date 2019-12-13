@@ -181,15 +181,14 @@ def main():
 
     print(env.map.data)
 
-    label_data = label(env, end=(1,5))
+    label_data = label(env, end=(3, 3))
 
-    print(label_data)
+    # print(label_data)
+    #
+    # desc_agent(env, label_data, mode="astar")
+    # # desc_agent(env, label_data)
 
-    desc_agent(env, label_data, mode="astar")
-    # desc_agent(env, label_data)
-
-    env.plot_path(label_data=label_data)
-    env.plot_path()
+    env.plot_path(label_data=None)
 
 if __name__ == '__main__':
     main()

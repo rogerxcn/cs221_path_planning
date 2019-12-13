@@ -3,6 +3,7 @@ import sys
 import grad_des
 import json
 import astar
+import random_agent
 
 def run_experiment(algo_name, run_id, dump_json):
     start = time.time()
@@ -22,6 +23,8 @@ def run_experiment(algo_name, run_id, dump_json):
         stats = grad_des.codalab_run(run_id)
     if algo_name == "astar":
         stats = astar.codalab_run(run_id)
+    if algo_name == "random":
+        stats = random_agent.codalab_run(run_id)
 
     ## End of your algorithms
 

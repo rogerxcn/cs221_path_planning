@@ -329,30 +329,33 @@ class DiscreteSquareMapEnv():
 
 
 def main():
-    # env = DiscreteSquareMapEnv(map_dim=(6, 6), block_area=(((1, 2), (3, 3)), ((4, 4), (5, 5))))
+    # # env = DiscreteSquareMapEnv(map_dim=(6, 6), block_area=(((1, 2), (3, 3)), ((4, 4), (5, 5))))
     env = DiscreteSquareMapEnv(preset=6)
-
-    # print("Initial map:")
+    #
+    # # print("Initial map:")
+    # # env.visualize()
+    # # print(env.local_map(3, 3))
+    #
+    # env.step(env.DOWN)
+    # # env.visualize()
+    # # env.counter.visualize()
+    #
+    # env.step(env.RIGHT)
+    # # env.visualize()
+    # # env.counter.visualize()
+    #
+    # env.step(env.LEFT)
+    #
+    # for i in range(40):
+    #     env.step(env.DOWN)
+    #     env.step(env.UP)
+    #
     # env.visualize()
-    # print(env.local_map(3, 3))
-
-    env.step(env.DOWN)
-    # env.visualize()
-    # env.counter.visualize()
-
-    env.step(env.RIGHT)
-    # env.visualize()
-    # env.counter.visualize()
-
-    env.step(env.LEFT)
-
-    for i in range(40):
-        env.step(env.DOWN)
-        env.step(env.UP)
+    # print(env.counter.get_data(max_count=10))
+    #
+    # env.plot_path()
 
     env.visualize()
-    print(env.counter.get_data(max_count=10))
-
     env.plot_path()
 
 
