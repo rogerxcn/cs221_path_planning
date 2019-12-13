@@ -4,6 +4,9 @@ import grad_des
 import json
 import astar
 import random_agent
+import expectimax_agent
+import local_approx
+import TDlearning
 
 def run_experiment(algo_name, run_id, dump_json):
     start = time.time()
@@ -25,6 +28,12 @@ def run_experiment(algo_name, run_id, dump_json):
         stats = astar.codalab_run(run_id)
     if algo_name == "random":
         stats = random_agent.codalab_run(run_id)
+    if algo_name == "expectimax":
+        stats = expectimax_agent.codalab_run(run_id)
+    if algo_name == "local":
+        stats = local_approx.codalab_run(run_id)
+    if algo_name == "TD":
+        stats = TDlearning.codalab_run(run_id)
 
     ## End of your algorithms
 
